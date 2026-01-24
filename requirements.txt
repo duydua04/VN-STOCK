@@ -1,0 +1,9 @@
+pyspark
+selenium
+beautifulsoup4
+numpy
+pandas
+python-dotenv
+ipykernel
+jupyter
+html5lib
