@@ -7,3 +7,4 @@ python-dotenv
 ipykernel
 jupyter
 html5lib
+s3fs
