@@ -34,16 +34,12 @@ class MinioConfig:
             "spark.hadoop.fs.s3a.connection.timeout": "10000",
             "spark.hadoop.fs.s3a.socket.timeout": "10000",
 
-            # 3. FIX LỖI "60s" (Thread KeepAlive - Thủ phạm chính)
-            # Ta dùng prefix "spark.hadoop." để Spark tự đẩy vào Hadoop Conf
             "spark.hadoop.fs.s3a.threads.keepalivetime": "60",
 
-            # 4. FIX các lỗi tiềm ẩn khác của YARN (Optional - cho sạch log)
             "spark.hadoop.yarn.router.subcluster.cleaner.interval.time": "60",
             "spark.hadoop.yarn.resourcemanager.delegation-token-renewer.thread-retry-interval": "60",
             "spark.hadoop.yarn.resourcemanager.delegation-token-renewer.thread-timeout": "60",
 
-            # 5. Tối ưu upload (Commit Directory thay vì Magic Commit để tránh lỗi trên MinIO)
             "spark.hadoop.fs.s3a.committer.name": "directory",
             "spark.hadoop.fs.s3a.committer.magic.enabled": "false",
 
