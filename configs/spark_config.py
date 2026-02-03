@@ -1,7 +1,6 @@
 from typing import Optional, List, Dict
 from pyspark.sql import SparkSession
 
-from configs.db_config import db_config
 from db_config import get_database_config
 from bucket_config import get_bucket_config
 
@@ -87,6 +86,6 @@ def get_spark_config():
                 "driver": "org.postgresql.Driver"
             }
         },
-        "s3": bucket_config.spark_s3_conf
+        "s3": bucket_config.spark_bucket_conf
     }
     return spark_config

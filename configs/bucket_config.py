@@ -20,7 +20,7 @@ class MinioConfig:
         }
 
     @property
-    def spark_s3_conf(self):
+    def spark_bucket_conf(self):
         """Dùng cho Spark """
         return {
             "spark.hadoop.fs.s3a.endpoint": self.endpoint_url,
