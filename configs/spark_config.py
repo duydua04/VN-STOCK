@@ -1,8 +1,8 @@
 from typing import Optional, List, Dict
 from pyspark.sql import SparkSession
 
-from db_config import get_database_config
-from bucket_config import get_bucket_config
+from configs.db_config import get_database_config
+from configs.bucket_config import get_bucket_config
 
 class SparkConnect:
     def __init__(
@@ -15,7 +15,7 @@ class SparkConnect:
             num_executors: Optional[int] = 1,
             jar_packages: Optional[List[str]] = None,
             spark_conf: Optional[Dict[str, str]] = None,
-            log_level: str = "INFO"
+            log_level: str = "WARN"
     ):
         self.app_name = app_name
         self.spark = self.create_spark_session(
@@ -38,7 +38,7 @@ class SparkConnect:
             num_executors: Optional[int] = 1,
             jar_packages: Optional[List[str]] = None,
             spark_conf: Optional[Dict[str, str]] = None,
-            log_level: str = "INFO"
+            log_level: str = "WARN"
     ) -> SparkSession:
 
         builder = SparkSession.builder \

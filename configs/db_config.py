@@ -26,4 +26,3 @@ def get_database_config():
     )
 
 db_config = get_database_config()
-print(db_config)
