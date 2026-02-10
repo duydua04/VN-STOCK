@@ -31,8 +31,6 @@ class SparkWritePostgres:
                 .option("driver", "org.postgresql.Driver") \
                 .mode(mode)
 
-            # (Tùy chọn) Thêm các options phụ nếu truyền qua kwargs
-            # Ví dụ: batchsize, isolationLevel...
             if kwargs:
                 writer = writer.options(**kwargs)
 
