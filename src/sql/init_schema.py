@@ -1,9 +1,9 @@
-from database.postgresql_connect import PostgresConnect
+from src.sql.postgresql_connect import PostgresConnect
 from configs.db_config import get_database_config
-from database.schema_manager import create_postgres_schema
+from src.sql.schema_manager import create_postgres_schema
 
 
-def main(db_config):
+def init_database_schema(db_config):
     print(f"Connecting to host: {db_config.host}")
     with PostgresConnect(
             host=db_config.host,
@@ -14,8 +14,3 @@ def main(db_config):
     ) as pg_client:
         connection, cursor = pg_client.connection, pg_client.cursor
         create_postgres_schema(connection, cursor, db_config.password)
-
-
-if __name__ == "__main__":
-    config = get_database_config()
-    main(config)

@@ -1,6 +1,5 @@
 import psycopg2
 
-
 class PostgresConnect:
     def __init__(self, host, port, user, password, database="postgres"):
         self.host = host
@@ -9,7 +8,6 @@ class PostgresConnect:
         self.password = password
         self.database = database
 
-        # Cấu hình cho psycopg2
         self.config = {
             'host': host,
             'port': port,

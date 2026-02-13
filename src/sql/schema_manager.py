@@ -37,7 +37,7 @@ def create_postgres_schema(connection, cursor, db_password):
         )
         new_cursor = new_connection.cursor()
 
-        with open("/home/hoangduy/PycharmProjects/stock-etl-dwh/src/sql/schema.sql", 'r') as f:
+        with open("/src/sql/schema.sql", 'r') as f:
             sql_script = f.read()
             new_cursor.execute(sql_script)
             print("-----Executed Schema Script------")
