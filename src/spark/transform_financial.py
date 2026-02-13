@@ -1,7 +1,6 @@
 from pyspark.sql import SparkSession, DataFrame, Window
 from pyspark.sql import functions as F
-from pyspark.sql.types import DecimalType, IntegerType, LongType, DateType
-from spark_connect import sc
+from pyspark.sql.types import DecimalType, IntegerType, LongType, DateType, BooleanType, StringType
 
 def _remove_empty_columns(df) -> DataFrame:
     counts = df.agg(*[F.count(c).alias(c) for c in df.columns]).collect()[0]
@@ -79,10 +78,12 @@ def read_price_data(spark: SparkSession, bucket: str) -> DataFrame:
     df_clean = df.select(
         F.col("stock_code"),
         F.col("trade_date").cast(DateType()),
-        F.col("open").cast(DecimalType(15, 2)),
-        F.col("high").cast(DecimalType(15, 2)),
-        F.col("low").cast(DecimalType(15, 2)),
-        F.col("close").cast(DecimalType(15, 2)),
+
+        (F.col("open") * 1000).cast(DecimalType(15, 2)).alias("open"),
+        (F.col("high") * 1000).cast(DecimalType(15, 2)).alias("high"),
+        (F.col("low") * 1000).cast(DecimalType(15, 2)).alias("low"),
+        (F.col("close") * 1000).cast(DecimalType(15, 2)).alias("close"),
+
         F.col("volume").cast(LongType())
     )
 
@@ -212,6 +213,10 @@ def calculate_outstanding_shares(df_balance) -> DataFrame:
 
 
 def transform_financial_ratio(df_financial_report, df_price_history):
+    df_price_history = df_price_history \
+        .withColumn("year", F.year("trade_date")) \
+        .withColumn("quarter", F.quarter("trade_date"))
+
     w_last_day = Window.partitionBy("stock_code", "year", "quarter").orderBy(F.col("trade_date").desc())
 
     df_price_quarterly = df_price_history.withColumn("rn", F.row_number().over(w_last_day)) \
@@ -250,4 +255,24 @@ def transform_financial_ratio(df_financial_report, df_price_history):
     )
 
     return df_calc
+
+
+def transform_dim_date(df_price):
+    df_dates = df_price.select("trade_date").distinct()
+
+    df_dim_date = df_dates.select(
+        F.col("trade_date").alias("date_id"),
+        F.dayofmonth("trade_date").cast(IntegerType()).alias("day"),
+        F.month("trade_date").cast(IntegerType()).alias("month"),
+        F.quarter("trade_date").cast(IntegerType()).alias("quarter"),
+        F.year("trade_date").cast(IntegerType()).alias("year"),
+
+        F.when(F.dayofweek("trade_date").isin([1, 7]), True)
+        .otherwise(False)
+        .cast(BooleanType()).alias("is_weekend"),
+
+        F.date_format("trade_date", "EEEE").cast(StringType()).alias("day_of_week")
+    )
+
+    return df_dim_date.orderBy("date_id")
 
