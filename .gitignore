@@ -3,3 +3,7 @@
 __pycache__/
 *.pyc
 logs
+airflow-webserver.pid
+airflow.cfg
+airflow.db
+webserver_config.py
