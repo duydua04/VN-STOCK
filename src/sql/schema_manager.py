@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
+import os
 
 def create_postgres_schema(connection, cursor, db_password):
     database = "vn_stock_data"
@@ -36,8 +36,9 @@ def create_postgres_schema(connection, cursor, db_password):
             database=database
         )
         new_cursor = new_connection.cursor()
+        schema_path = os.path.join(os.path.dirname(__file__), "schema.sql")
 
-        with open("/src/sql/schema.sql", 'r') as f:
+        with open(schema_path, 'r') as f:
             sql_script = f.read()
             new_cursor.execute(sql_script)
             print("-----Executed Schema Script------")

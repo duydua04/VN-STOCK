@@ -1,3 +1,5 @@
+import os
+
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.types import BooleanType, DateType, LongType, DecimalType
@@ -10,11 +12,19 @@ def get_full_enterprise_information(spark: SparkSession, bucket: str) -> DataFra
         .option("sep", ",") \
         .csv(f's3a://{bucket}/enterprise/enterprise_basic_info.csv')
 
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+
+    csv_path = os.path.join(project_root, "data", "vn50_industry_final.csv")
+
+    print(f"Reading local industry file from: {csv_path}")
+
     industry_by_tax_code = spark.read \
         .option("header", True) \
         .option('inferSchema', True) \
         .option("sep", ",") \
-        .csv("../../data/vn50_industry_final.csv")
+        .csv(f"file://{csv_path}")
 
     full_enterprise = basic_enterprise \
         .withColumn('listing_date', F.to_date(F.col('listing_date'), 'dd/MM/yyyy')) \
