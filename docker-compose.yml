@@ -33,7 +33,7 @@ services:
     volumes:
       - postgres_dwh_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${USER}"]
+      test: ["CMD", "pg_isready", "-U", "${USER}", "-d", "${DATABASE}"]
       interval: 10s
       retries: 5
 
